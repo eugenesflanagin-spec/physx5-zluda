@@ -13,7 +13,7 @@ arch=(x86_64)
 url="https://github.com/NVIDIA-Omniverse/PhysX"
 license=(Apache-2.0 LicenseRef-NVIDIA-CUDA-EULA)
 depends=(zluda gcc-libs glibc freeglut glu libxmu libx11 libxi)
-makedepends=(cmake ninja gcc14 python)
+makedepends=(cmake ninja gcc14 python patchelf)
 optdepends=('konsole: terminal used by the menu entries')
 options=(!lto !debug)
 _cuda=13.4.92
@@ -42,7 +42,13 @@ sha256sums=('486860085ee6c09da14c045d600edf0f3da662b67d632af69c57a2004b281a90'
             'c969e61ded12dbf0cf20ace72867f1622ec0e8ea1e1d305e27761012025f7aaa'
             '6b7516074f42f80dd3feb9c11318c8e1c5ab56cdd9f18fff4c5ace2e7e0a8209'
             '0e619cf3d5b27f7c812665599ca9761fc296e56129b24a85d822a5d8a1a3bd75'
-            'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+            '015cd5c1f0d132a046d5c47c092c1e070f4ac8725d54d0abb24f770fd2dc6cf1'
+            'a311794ea551fe36fd5e9d96281861ecea053d8bf4df5968b32537091ba8649e'
+            '67b443b983b8e9aed5a60109847d5f0bad6fc82b2b11cb3f65ec790086e8845f'
+            '40577fd72e122ce9306ac15815cd3ecc8e116d709720aa35874a6d7689600bb6'
+            '4a597287b45211b792729b6ebfda542ea7cf78f9ad695d8e0bae5fe3a6b78ebf'
+            '1753cde33f01cb8bb3eb9027db95b4da10fd92a480135f6a1293da3931e02782'
+            '50dd7494550502d6989d17ef4bbbf4c7e8d4041f5dc17d0e237aa37666f19aa8')
 
 _prefix=/opt/physx5
 # $srcdir is only defined inside the functions
@@ -107,6 +113,8 @@ package() {
                  "$pkgdir/usr/share/applications" "$pkgdir/usr/share/licenses/$pkgname"
   # snippets (demo programs) and the self-test
   install -m755 "$bin"/Snippet*_64 "$pkgdir$_prefix/bin/"
+  # the build tree bakes its own output dir into RUNPATH; point the snippets at the installed libs instead
+  local f; for f in "$pkgdir$_prefix"/bin/Snippet*_64; do patchelf --set-rpath '$ORIGIN/../lib' "$f"; done
   install -m755 "$srcdir/physx5-gputest" "$pkgdir$_prefix/bin/"
   # ZLUDA shim + the one redistributable CUDA runtime library PhysXGpu links against
   install -m755 "$srcdir/libzluda-physx-shim.so" "$pkgdir$_prefix/lib/"
