@@ -35,19 +35,12 @@ DONE
 - physx5-zluda-run (wrapper) written. Scratch probes in
   /tmp/claude-1000/-home-user/a5463c93-0c4a-4761-b055-a545017926a9/scratchpad/physx5/probe (loadfn.c = per-kernel resolver).
 
-IN PROGRESS
-- `makepkg -sf` running (log: makepkg.log). PKGBUILD fixes so far: paths must be set inside functions ($srcdir is
-  empty at parse time); makepkg CXXFLAGS (-Werror=format-security) must be cleared for the SDK (PhysX adds -Wno-format).
-- Local git repo initialised (first commit = everything except NVIDIA/toolkit/build files, see .gitignore).
-  Publish (user decision, not done by the agent): `gh repo create physx5-zluda --public --source=. --push`.
-
-NEXT STEPS (exact)
-1. `cd ~/pkgbuilds/physx5-zluda && makepkg -sf` (sources already in this dir: PhysX-<sha>.tar.gz + 5 redist .tar.xz).
-2. `sudo pacman -U physx5-zluda-*.pkg.tar.zst`; verify `pacman -Qo /usr/lib/libcuda.so.1` is still zluda-preview-bin.
-3. `timeout 60 physx5-zluda-run gputest` -> expect "RESULT: GPU PhysX ENGAGED", exit 0.
-4. `desktop-file-validate /usr/share/applications/physx5-*.desktop && kbuildsycoca6`.
-5. Verify `cuda13-local/bin/cuobjdump -lptx -lelf /opt/physx5/lib/libPhysXGpu_64.so` -> 61 PTX, 0 ELF.
-6. Final report (see task deliverables); memory notes listed below.
+DONE (11:35) — package built and installed
+- physx5-zluda-5.11.0-1-x86_64.pkg.tar.zst installed with `sudo pacman -U`; /usr/lib/libcuda.so.1 still zluda-preview-bin.
+- `physx5-zluda-run gputest` -> "RESULT: GPU PhysX ENGAGED", exit 0 (release build, 61 PTX / 0 ELF in /opt/physx5/lib/libPhysXGpu_64.so).
+- Menu: Education & Science / Physics & Electronics (after `menu-resort`), both .desktop files validate.
+- CPU reference (`physx5-zluda-run --cpu-only gputest --cpu`) completes; trajectories agree qualitatively (chaotic stack).
+- Git: local repo, commit e3c9682 (+ follow-up). Publish is the USER's call: `gh repo create physx5-zluda --public --source=. --push`.
 
 ## Dev-tree commands (if the package build needs iterating)
 cmake configure used for dev/ (replace `checked` with `release` for the package):
