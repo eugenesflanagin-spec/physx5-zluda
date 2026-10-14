@@ -1,0 +1,15 @@
+# NVIDIA toolkit extracts and binaries -- never commit (proprietary redistributables)
+cuda-local/
+cuda13-local/
+cuda-dl/
+*.tar.xz
+*.tar.gz
+# makepkg work dirs and outputs
+src/
+pkg/
+dev/
+*.pkg.tar.*
+*.log
+# local build artefacts
+*.so
+*.o
