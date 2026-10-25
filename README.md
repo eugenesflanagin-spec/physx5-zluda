@@ -11,7 +11,7 @@ Tested with: `zluda-preview-bin` **7.preview.13 only**. The AUR now carries 7.pr
 not been re-verified; the package does not pin a ZLUDA version. After a ZLUDA update, run
 `physx5-zluda-run gputest` once and check the `RESULT:` line.
 
-Build details, the patch, the ZLUDA gaps and how they were found: [docs/DEVELOPER-NOTES.md](docs/DEVELOPER-NOTES.md).
+Build details, the patch, the ZLUDA gaps and how they were found: [docs/DEVELOPER-NOTES.md](https://github.com/eugenesflanagin-spec/physx5-zluda/blob/master/docs/DEVELOPER-NOTES.md).
 
 ```
 $ physx5-zluda-run gputest

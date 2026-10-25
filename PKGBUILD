@@ -51,7 +51,7 @@ sha256sums=('486860085ee6c09da14c045d600edf0f3da662b67d632af69c57a2004b281a90'
             '41b122bfedb469fa4c4db0106c045b3ce653d2105dea8349cf6b02f1d7dfd3c0'
             '14bb89981d22632b268f51ea87ca4cd046ac85dd3908c30c438343546d852d54'
             'b420844eca245146e351567bcbdced32bbcfebc7b0bb34e8089e9d41ef48417b'
-            'ce26732d09823f0cfcb3c1ef298a141cc3cd3efd6802bbc0b8fb37edb3b3b542')
+            'aaf74e1d806fe671dcf3c91b689021b70c7716b3aefed15f5549e6e36abe1372')
 
 _prefix=/opt/physx5
 # $srcdir is only defined inside the functions
