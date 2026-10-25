@@ -134,6 +134,9 @@ More cases in the [User Guide](https://github.com/eugenesflanagin-spec/physx5-zl
 | `docs/USER-GUIDE.md` | user guide: install, usage, every option, troubleshooting, glossary |
 | `docs/DEVELOPER-NOTES.md` | how the build and the ZLUDA workarounds were worked out |
 | `CREDITS.md`, `LICENSE` | sources this builds on, and the licence of this project's own files |
+| `packaging/` | clean-container build (`build.sh`) and install test (`test-in-container.sh`) used for releases |
+| `.github/workflows/release.yml` | on a `v<pkgver>-<pkgrel>` tag: build, install-test, publish the GitHub release |
+| `docs/release-notes/` | notes for each release |
 
 ## Credits and licence
 

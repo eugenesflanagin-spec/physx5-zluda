@@ -54,7 +54,7 @@ sha256sums=('486860085ee6c09da14c045d600edf0f3da662b67d632af69c57a2004b281a90'
             '92068973f982620a7f5a451a6e6974670b405fbafbf1c3c4e50d5a2279d8a865'
             '14bb89981d22632b268f51ea87ca4cd046ac85dd3908c30c438343546d852d54'
             'b420844eca245146e351567bcbdced32bbcfebc7b0bb34e8089e9d41ef48417b'
-            '1c214d23d9c7a97183898219488b96e1361d7f2db7b65c90b678484f0bcd17ca'
+            '5f5afd05c6391b3e75abbd5bf1181f329a03a5524fcdf3617aeb70119f338385'
             '4ed0619d61da558f6ceb942cc95c7cc10afbac0cfea0dedad04670e37f7504f0'
             '0a1a50f6c334f7218512f11138aa9ecc62c6908dfe71b8b4edff03e1d04b3889')
 
@@ -115,6 +115,17 @@ build() {
 package() {
   _setpaths
   DESTDIR="$pkgdir" ninja -C "$srcdir/build" install
+
+  # The exported CMake package points at the private build-time CUDA toolkit (find_dependency(CUDAToolkit),
+  # CUDA::cudart and the toolkit's libcuda stub inside $srcdir).  Users have no CUDA toolkit (and must not
+  # install one next to ZLUDA), so point it at the packaged libcudart instead; libPhysXGpu_64.so is dlopen'ed
+  # at run time and gets libcuda.so.1 from ZLUDA.
+  local _cm="$pkgdir$_prefix/lib/cmake/PhysX"
+  sed -i 's/^\(\s*\)find_dependency(CUDAToolkit REQUIRED)/\1# find_dependency(CUDAToolkit REQUIRED)  -- not needed: libcudart.so.13 is in lib\//' "$_cm/PhysXConfig.cmake"
+  sed -i "s#;CUDA::cudart;[^\"]*stubs/libcuda\.so\"#;\${_IMPORT_PREFIX}/lib/libcudart.so.13\"#" "$_cm/PhysXTargets.cmake"
+  if grep -rqF -e "$srcdir" -e 'CUDA::' "$_cm" || grep -rq '^\s*find_dependency(CUDAToolkit' "$_cm"; then
+    echo "CMake package still references the build-time CUDA toolkit" >&2; return 1
+  fi
 
   local bin="$_physx/bin/linux.x86_64/release"
   install -dm755 "$pkgdir$_prefix/bin" "$pkgdir$_prefix/lib" "$pkgdir$_prefix/share/doc" "$pkgdir/usr/bin" \
