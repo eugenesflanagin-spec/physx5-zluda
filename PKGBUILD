@@ -13,8 +13,9 @@ arch=(x86_64)
 url="https://github.com/NVIDIA-Omniverse/PhysX"
 # PhysX SDK (physx/ subtree, SPDX headers + physx/LICENSE.md): Apache-2.0.  The repository root's
 # LICENSE.md is BSD-3-Clause but covers older releases / the other subprojects, none of which are built.
-# libcudart.so.13 is redistributed under the NVIDIA CUDA Toolkit EULA.
-license=(Apache-2.0 LicenseRef-NVIDIA-CUDA-EULA)
+# libcudart.so.13 is redistributed under the NVIDIA CUDA Toolkit EULA.  The shim, self-test,
+# wrapper and menu entries written for this package are MIT (LICENSE).
+license=(Apache-2.0 LicenseRef-NVIDIA-CUDA-EULA MIT)
 depends=(zluda gcc-libs glibc freeglut glu libxmu libx11 libxi)
 makedepends=(cmake ninja gcc14 python patchelf rapidjson)
 optdepends=('konsole: terminal used by the menu entries')
@@ -33,7 +34,9 @@ source=(PhysX-$_commit.tar.gz::$url/archive/$_commit.tar.gz
         physx5-zluda-run
         physx5-zluda.desktop
         physx5-gputest.desktop
-        README.md)
+        README.md
+        CREDITS.md
+        LICENSE)
 noextract=(cuda_nvcc-linux-x86_64-$_cuda-archive.tar.xz
            cuda_cudart-linux-x86_64-$_cuda-archive.tar.xz
            cuda_crt-linux-x86_64-$_cuda-archive.tar.xz
@@ -45,13 +48,15 @@ sha256sums=('486860085ee6c09da14c045d600edf0f3da662b67d632af69c57a2004b281a90'
             'c969e61ded12dbf0cf20ace72867f1622ec0e8ea1e1d305e27761012025f7aaa'
             '6b7516074f42f80dd3feb9c11318c8e1c5ab56cdd9f18fff4c5ace2e7e0a8209'
             '0e619cf3d5b27f7c812665599ca9761fc296e56129b24a85d822a5d8a1a3bd75'
-            'e30dce564a35abc1f99d3d89201e300672cd3013f549b8e7a682c4ae71d8c42c'
-            'a311794ea551fe36fd5e9d96281861ecea053d8bf4df5968b32537091ba8649e'
-            '67b443b983b8e9aed5a60109847d5f0bad6fc82b2b11cb3f65ec790086e8845f'
-            '41b122bfedb469fa4c4db0106c045b3ce653d2105dea8349cf6b02f1d7dfd3c0'
+            '238a0a35cf069e7044d2f50de4497aab1eee90729a2db0a984e1423c6c53bfee'
+            '8952da704276f17efa409ac1337ebc376b195304a80edcf61915187f00242a94'
+            '10291d535d7efc8e45c08767808e86941ec6d9f55c3ae8fb7757ddd87c1742d9'
+            '92068973f982620a7f5a451a6e6974670b405fbafbf1c3c4e50d5a2279d8a865'
             '14bb89981d22632b268f51ea87ca4cd046ac85dd3908c30c438343546d852d54'
             'b420844eca245146e351567bcbdced32bbcfebc7b0bb34e8089e9d41ef48417b'
-            'aaf74e1d806fe671dcf3c91b689021b70c7716b3aefed15f5549e6e36abe1372')
+            '1c214d23d9c7a97183898219488b96e1361d7f2db7b65c90b678484f0bcd17ca'
+            '4ed0619d61da558f6ceb942cc95c7cc10afbac0cfea0dedad04670e37f7504f0'
+            '0a1a50f6c334f7218512f11138aa9ecc62c6908dfe71b8b4edff03e1d04b3889')
 
 _prefix=/opt/physx5
 # $srcdir is only defined inside the functions
@@ -129,6 +134,8 @@ package() {
   install -m644 "$_physx/README.md" "$pkgdir$_prefix/share/doc/README.PhysX.md"
   install -m644 "$_physx/CHANGELOG.md" "$pkgdir$_prefix/share/doc/"
   install -m644 "$_physx/LICENSE.md" "$pkgdir/usr/share/licenses/$pkgname/LICENSE.PhysX.md"
+  install -m644 "$srcdir/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -m644 "$srcdir/CREDITS.md" "$pkgdir$_prefix/share/doc/"
   # the toolkit dir's LICENSE is whichever redist tarball was extracted last (CCCL); ship the EULA that
   # covers the redistributed libcudart.so.13, taken from the cuda_cudart tarball itself
   bsdtar -xOf "$srcdir/cuda_cudart-linux-x86_64-$_cuda-archive.tar.xz" "cuda_cudart-linux-x86_64-$_cuda-archive/LICENSE" \
