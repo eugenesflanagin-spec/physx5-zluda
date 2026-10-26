@@ -148,8 +148,9 @@ jobs:
               gh release upload "$TAG" release/* --clobber
               gh release edit "$TAG" --title "$(cat release-title.txt)" --notes-file release-notes.md --draft=false
             else
-              echo "::error::release $TAG is already published; delete it first (gh release delete $TAG) to rebuild it"
-              exit 1
+              # published already (e.g. the tag was pushed again after a history rewrite):
+              # keep the files people may have downloaded. To rebuild, delete the release first.
+              echo "::notice::release $TAG is already published; leaving it unchanged (gh release delete $TAG to rebuild it)"
             fi
           else
             gh release create "$TAG" release/* --verify-tag \
